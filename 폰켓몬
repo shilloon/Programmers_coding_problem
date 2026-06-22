@@ -1,0 +1,18 @@
+#include <vector>
+#include <algorithm>
+#include <unordered_set>
+
+using namespace std;
+
+int solution(vector<int> nums)
+{
+    int answer = 0;
+    
+    int max_types = nums.size() / 2;
+    
+    unordered_set<int> ponketmon_types(nums.begin(), nums.end());
+    
+    answer = min(ponketmon_types.size(), (size_t)max_types);
+    
+    return answer;
+}
