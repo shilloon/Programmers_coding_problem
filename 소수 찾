@@ -1,0 +1,28 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int n) {
+    
+    vector<char> is_prime(n + 1, 1);
+
+    int answer = n - 1;
+    
+    for(long long int i = 2; i * i <= n; i++)
+    {
+        if(is_prime[i] == 0) continue;
+        
+        for(long long int j = i * i; j <= n; j += i)
+        {
+            if(is_prime[j] == 1)
+            {
+                is_prime[j] = 0;
+                answer--;
+            }
+        }
+        
+    }
+    
+    return answer;
+}
