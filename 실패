@@ -1,0 +1,60 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct Stage
+{
+    int id;
+    double failure_rate;
+};
+
+bool compareStage(const Stage& a, const Stage& b)
+{
+    if(a.failure_rate == b.failure_rate)
+    {
+        return a.id < b.id;
+    }
+    return a.failure_rate > b.failure_rate;
+}
+
+vector<int> solution(int N, vector<int> stages) {
+    vector<int> current_user_count(N+2, 0);
+    for(int s : stages)
+    {
+        current_user_count[s]++;
+    }
+    
+    vector<Stage> stage_info;
+    double total_players = stages.size();
+    
+    for(int i = 1; i <= N; i++)
+    {
+        double fail_users = current_user_count[i];
+        double rate = 0.0;
+        
+        if(total_players > 0)
+        {
+            rate = fail_users / total_players;
+        }
+        else
+        {
+            rate = 0.0;
+        }
+        
+        stage_info.push_back({i, rate});
+        
+        total_players -= fail_users;
+    }
+    
+    sort(stage_info.begin(), stage_info.end(), compareStage);
+    
+    vector<int> answer;
+    for(const auto& stage : stage_info)
+    {
+        answer.push_back(stage.id);
+    }
+    
+    return answer;
+}
