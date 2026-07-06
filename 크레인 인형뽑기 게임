@@ -1,0 +1,40 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(vector<vector<int>> board, vector<int> moves) {
+    int answer = 0;
+    
+    vector<int> basket;
+    
+    int n = board.size();
+    
+    for(int col : moves)
+    {
+        int c = col - 1;
+        
+        for(int r = 0; r < n; r++)
+        {
+            if(board[r][c] != 0)
+            {
+                int doll = board[r][c];
+                board[r][c] = 0;
+                
+                if(!basket.empty() && basket.back() == doll)
+                {
+                    basket.pop_back();
+                    answer += 2;
+                }
+                else
+                {
+                    basket.push_back(doll);
+                }
+                
+                break;
+            }
+        }
+    }
+    
+    return answer;
+}
