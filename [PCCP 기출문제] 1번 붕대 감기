@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+// bandage_len은 배열 bandage의 길이입니다.
+// attacks_rows는 2차원 배열 attacks의 행 길이, attacks_cols는 2차원 배열 attacks의 열 길이입니다.
+int solution(int bandage[], size_t bandage_len, int health, int** attacks, size_t attacks_rows, size_t attacks_cols) {
+
+    int max_health = health;
+    int current_health = health;
+    
+    int bandage_time = bandage[0];
+    int recover_per_sec = bandage[1];
+    int bonus_recover = bandage[2];
+    
+    int last_attack_time = 0;
+    
+    for(size_t i = 0; i < attacks_rows; i++)
+    {
+        int attack_time = attacks[i][0];
+        int damage = attacks[i][1];
+        
+        int peace_time = attack_time - last_attack_time - 1;
+        
+        if(peace_time > 0)
+        {
+            current_health += peace_time * recover_per_sec;
+            current_health += (peace_time / bandage_time) * bonus_recover;
+            
+            if(current_health > max_health)
+            {
+                current_health = max_health;
+            }
+        }
+        
+        current_health -= damage;
+        if(current_health <= 0) return -1;
+        
+        last_attack_time = attack_time;
+    }
+    
+    return current_health;
+}
