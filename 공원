@@ -1,0 +1,44 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+bool can_place(const vector<vector<string>>& park, int r, int c, int size, int R, int C)
+{
+    if(r + size > R || c + size > C) return false;
+    
+    for(int i = r; i < r + size; i++)
+    {
+        for(int j = c; j < c + size; j++)
+        {
+            if(park[i][j] != "-1") return false;
+        }
+    }
+    
+    return true;
+}
+
+int solution(vector<int> mats, vector<vector<string>> park)
+{
+    int R = park.size();
+    int C = park[0].size();
+    
+    sort(mats.rbegin(), mats.rend());
+    
+    for(int size : mats)
+    {
+        for(int r = 0; r < R; r++)
+        {
+            for(int c = 0; c < C; c++)
+            {
+                if(can_place(park, r, c, size, R, C))
+                {
+                    return size;
+                }
+            }
+        }
+    }
+    
+    return -1;
+}
