@@ -1,0 +1,58 @@
+#include <string>
+#include <vector>
+#include <iomanip>
+#include <sstream>
+
+using namespace std;
+
+int to_seconds(const string& time_str)
+{
+    int mm = stoi(time_str.substr(0, 2));
+    int ss = stoi(time_str.substr(3, 2));
+    return mm * 60 + ss;
+}
+
+string to_time_string(int total_sec)
+{
+    int mm = total_sec / 60;
+    int ss = total_sec % 60;
+    
+    stringstream ss_out;
+    ss_out << setfill('0') << setw(2) << mm << ":" << setw(2) << ss;
+    return ss_out.str();
+}
+
+string solution(string video_len, string pos, string op_start, string op_end, vector<string> commands) {
+    int total_len_sec = to_seconds(video_len);
+    int current_sec = to_seconds(pos);
+    int op_start_sec = to_seconds(op_start);
+    int op_end_sec = to_seconds(op_end);
+    
+    auto check_and_skip_opening = [&]()
+    {
+        if(current_sec >= op_start_sec && current_sec <= op_end_sec)
+        {
+            current_sec = op_end_sec;
+        }
+    };
+    
+    check_and_skip_opening();
+    
+    for(const string& cmd : commands)
+    {     
+        if(cmd == "prev")
+        {
+            current_sec -= 10;
+            if(current_sec < 0) current_sec = 0;
+        }
+        else if(cmd == "next")
+        {
+            current_sec += 10;
+            if(current_sec > total_len_sec) current_sec = total_len_sec;
+        }
+        
+        check_and_skip_opening();
+    }
+    
+    return to_time_string(current_sec);
+}
