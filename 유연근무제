@@ -1,0 +1,47 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int to_minutes(int hhmm)
+{
+    int hour = hhmm / 100;
+    int minute = hhmm % 100;
+    return hour * 60 + minute;
+}
+
+int solution(vector<int> schedules, vector<vector<int>> timelogs, int startday) {
+    int answer = 0;
+    int n = schedules.size();
+    
+    for(int i = 0; i < n; i++)
+    {
+        int limit_minutes = to_minutes(schedules[i]) + 10;
+        bool is_eligible = true;
+        
+        for(int j = 0; j < 7; j++)
+        {
+            int current_day = (startday - 1 + j) % 7 + 1;
+            
+            if(current_day == 6 || current_day == 7)
+            {
+                continue;
+            }
+            
+            int actual_minutes = to_minutes(timelogs[i][j]);
+            
+            if(actual_minutes > limit_minutes)
+            {
+                is_eligible = false;
+                break;
+            }
+        }
+        
+        if(is_eligible)
+        {
+            answer++;
+        }
+    }
+    
+    return answer;
+}
