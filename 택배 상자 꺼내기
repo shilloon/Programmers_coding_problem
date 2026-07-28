@@ -1,0 +1,29 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int get_col(int k, int w)
+{
+    int row = (k - 1) / w;
+    int idx = (k - 1) % w;
+    
+    if(row % 2 == 0) return idx;
+    else return (w - 1) - idx;
+}
+
+int solution(int n, int w, int num) {
+    int answer = 0;
+    
+    int target_col = get_col(num, w);
+    
+    for(int k = num; k <= n; k++)
+    {
+        if(get_col(k, w) == target_col)
+        {
+            answer++;
+        }
+    }
+    
+    return answer;
+}
