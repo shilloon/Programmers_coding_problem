@@ -1,0 +1,98 @@
+#include <string>
+#include <vector>
+#include <unordered_set>
+#include <unordered_map>
+#include <algorithm>
+
+using namespace std;
+
+struct WordInfo {
+    string text;
+    int start_idx;
+    int end_idx;
+    unordered_set<int> required_spoilers;
+};
+
+int solution(string message, vector<vector<int>> spoiler_ranges) {
+    int answer = 0;
+    
+    vector<WordInfo> words;
+    int n = message.length();
+    int i = 0;
+    
+    while(i < n)
+    {
+        if(message[i] == ' ')
+        {
+            i++;
+            continue;
+        }
+        
+        int start = i;
+        while(i < n && message[i] != ' ')
+        {
+            i++;
+        }
+        
+        int end = i - 1;
+        words.push_back({message.substr(start, end - start + 1), start, end, {}});
+    }
+    
+    unordered_set<string> plain_words;
+    int num_spoilers = spoiler_ranges.size();
+    
+    for(auto& w : words)
+    {
+        for(int s_idx = 0; s_idx < num_spoilers; s_idx++)
+        {
+            int s_start = spoiler_ranges[s_idx][0];
+            int s_end = spoiler_ranges[s_idx][1];
+            
+            if(max(w.start_idx, s_start) <= min(w.end_idx, s_end))
+            {
+                w.required_spoilers.insert(s_idx);
+            }
+        }
+        
+        if(w.required_spoilers.empty())
+        {
+            plain_words.insert(w.text);
+        }
+    }
+    
+    unordered_set<int> opened_spoilers;
+    unordered_set<string> seen_spoiler_words;
+    
+    for(int s_idx = 0; s_idx < num_spoilers; s_idx++)
+    {
+        opened_spoilers.insert(s_idx);
+        
+        for(auto& w : words)
+        {
+            if(w.required_spoilers.empty()) continue;
+            
+            bool is_fully_opened = true;
+            for(int req : w.required_spoilers)
+            {
+                if(opened_spoilers.find(req) == opened_spoilers.end())
+                {
+                    is_fully_opened = false;
+                    break;
+                }
+            }
+            
+            if(is_fully_opened && w.required_spoilers.count(s_idx))
+            {
+                if(plain_words.find(w.text) == plain_words.end() && seen_spoiler_words.find(w.text) == seen_spoiler_words.end())
+                {
+                    answer++;
+                }
+                
+                seen_spoiler_words.insert(w.text);
+            }
+            
+        }
+    }
+    
+    return answer;
+}
