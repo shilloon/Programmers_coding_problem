@@ -1,0 +1,43 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(vector<vector<int>> signals) {
+    int n = signals.size();
+    
+    vector<int> periods(n);
+    for(int i = 0; i < n; i++)
+    {
+        periods[i] = signals[i][0] + signals[i][1] + signals[i][2];
+    }
+    
+    int MAX_TIME = 4000000;
+    
+    for(int t = 1; t <= MAX_TIME; t++)
+    {
+        bool all_yellow = true;
+        
+        for(int i = 0; i < n; i++)
+        {
+            int G = signals[i][0];
+            int Y = signals[i][1];
+            int period = periods[i];
+            
+            int mod = (t - 1) % period;
+            
+            if(mod < G || mod >= G + Y)
+            {
+                all_yellow = false;
+                break;
+            }
+        }
+        
+        if(all_yellow)
+        {
+            return t;
+        }
+    }
+    
+    return -1;
+}
