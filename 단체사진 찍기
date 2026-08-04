@@ -1,0 +1,57 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+// 전역 변수를 정의할 경우 함수 내에 초기화 코드를 꼭 작성해주세요.
+int solution(int n, vector<string> data) {
+    int answer = 0;
+    
+    string friends = "ACFJMNRT";
+    
+    sort(friends.begin(), friends.end());
+    
+    do
+    {
+        bool is_valid = true;
+        
+        for(const string& d : data)
+        {
+            char p1 = d[0];
+            char p2 = d[2];
+            char op = d[3];
+            int target_dist = d[4] - '0';
+            
+            int pos1 = friends.find(p1);
+            int pos2 = friends.find(p2);
+            
+            int actual_dist = abs(pos1 - pos2) - 1;
+            
+            if(op == '=' && actual_dist != target_dist)
+            {
+                is_valid = false;
+                break;
+            }
+            if(op == '<' && actual_dist >= target_dist)
+            {
+                is_valid = false;
+                break;
+            }
+            if(op == '>' && actual_dist <= target_dist)
+            {
+                is_valid = false;
+                break;
+            }
+        }
+        
+        if(is_valid)
+        {
+            answer++;
+        }
+    }
+    while(next_permutation(friends.begin(), friends.end()));
+    
+    return answer;
+}
