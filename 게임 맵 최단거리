@@ -1,0 +1,45 @@
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int dx[] = {-1, 1, 0, 0};
+int dy[] = {0, 0, -1, 1};
+
+int solution(vector<vector<int> > maps)
+{
+    int n = maps.size();
+    int m = maps[0].size();
+
+    queue<pair<int, int>> q;
+    
+    q.push({0, 0});
+    
+    while(!q.empty())
+    {
+        auto [r, c] = q.front();
+        q.pop();
+        
+        if(r == n - 1 && c == m - 1)
+        {
+            return maps[r][c];
+        }
+        
+        for(int i = 0; i < 4; i++)
+        {
+            int nr = r + dx[i];
+            int nc = c + dy[i];
+            
+            if(nr >= 0 && nr < n && nc >= 0 && nc < m)
+            {
+                if(maps[nr][nc] == 1)
+                {
+                    maps[nr][nc] = maps[r][c] + 1;
+                    q.push({nr, nc});
+                }
+            }
+        }
+    }
+    
+    return -1;
+}
