@@ -1,0 +1,25 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+string solution(int n) {
+    string answer = "";
+    
+    string num_map[] = {"4", "1", "2"};
+    
+    while(n > 0)
+    {
+        int remainder = n % 3;
+        n = n / 3;
+        
+        if(remainder == 0)
+        {
+            n--;
+        }
+        
+        answer = num_map[remainder] + answer;
+    }
+    
+    return answer;
+}
