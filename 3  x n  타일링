@@ -1,0 +1,25 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int n) {
+    if(n % 2 != 0) return 0;
+    
+    long long MOD = 1000000007;
+    vector<long long> dp(n + 1, 0);
+    
+    dp[0] = 1;
+    dp[2] = 3;
+    
+    long long special_sum = 0;
+    
+    for(int i = 4; i <= n; i+=2)
+    {
+        special_sum = (special_sum + dp[i-4]) % MOD;
+        
+        dp[i] = (dp[i - 2] * 3 + special_sum * 2) % MOD;
+    }
+    
+    return dp[n];
+}
