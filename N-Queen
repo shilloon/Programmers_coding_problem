@@ -1,0 +1,49 @@
+#include <string>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+int answer = 0;
+int col[15];
+
+bool isValid(int row, int c)
+{
+    
+    for(int i = 0; i < row; i++)
+    {
+        
+        if(col[i] == c) return false;
+        if(abs(row - i) == abs(c - col[i])) return false;
+    
+    }
+    
+    return true;
+}
+
+void dfs(int row, int n)
+{
+    
+    if (row == n)
+    {
+        answer++;
+        return;
+    }
+    
+    for(int c = 0; c < n; c++)
+    {
+        if(isValid(row, c))
+        {
+            col[row] = c;
+            dfs(row + 1, n);
+        }
+    }
+}
+
+int solution(int n) {
+    
+    answer = 0;
+    dfs(0, n);
+    return answer;
+    
+}
