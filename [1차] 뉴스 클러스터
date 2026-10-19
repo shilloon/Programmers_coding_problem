@@ -1,0 +1,57 @@
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <cctype>
+
+using namespace std;
+
+map<string, int> makeMultiSet(const string& s)
+{
+    map<string, int> m;
+    
+    for(size_t i = 0; i < s.length() - 1; i++)
+    {
+        if(isalpha(s[i]) && isalpha(s[i+1]))
+        {
+            string token = "";
+            token += tolower(s[i]);
+            token += tolower(s[i + 1]);
+            m[token]++;
+        }
+    }
+    
+    return m;
+}
+
+int solution(string str1, string str2) {
+
+    map<string, int> m1 = makeMultiSet(str1);
+    map<string, int> m2 = makeMultiSet(str2);
+    
+    set<string> all_keys;
+    for(auto& p : m1) all_keys.insert(p.first);
+    for(auto& p : m2) all_keys.insert(p.first);
+    
+    int intersection_size = 0;
+    int union_size = 0;
+    
+    for(const string& key : all_keys)
+    {
+        int count1 = m1.count(key) ? m1[key] : 0;
+        int count2 = m2.count(key) ? m2[key] : 0;
+        
+        intersection_size += min(count1, count2);
+        union_size += max(count1, count2);
+    }
+    
+    if(union_size == 0)
+    {
+        return 65536;
+    }
+    
+    double jaccard = (double)intersection_size / union_size;
+    
+    return (int)(jaccard * 65536);
+}
