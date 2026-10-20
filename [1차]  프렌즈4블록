@@ -1,0 +1,72 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int m, int n, vector<string> board) {
+    int answer = 0;
+    
+    while (true)
+    {
+        
+        vector<vector<bool>> remove(m, vector<bool>(n, false));
+        bool hasRemoved = false;
+        
+        for(int i = 0; i < m - 1; i++)
+        {
+            for(int j = 0; j < n - 1; j++)
+            {
+                
+                if(board[i][j] == ' ') continue;
+                
+                char target = board[i][j];
+                if(board[i][j+1] == target && board[i+1][j] == target && board[i+1][j+1] == target)
+                {
+                    remove[i][j] = true;
+                    remove[i][j+1] = true;
+                    remove[i+1][j] = true;
+                    remove[i+1][j+1] = true;
+                    hasRemoved = true;
+                }
+                
+            }
+        }
+        
+        if(!hasRemoved) break;
+        
+        for(int i = 0; i < m; i++)
+        {
+            for(int j = 0; j < n; j++)
+            {
+                if(remove[i][j])
+                {
+                    board[i][j] = ' ';
+                    answer++;
+                }
+            }
+        }
+        
+        for(int j = 0; j < n; j++)
+        {
+            for(int i = m - 1; i >= 0; i--)
+            {
+                if(board[i][j] == ' ')
+                {
+                    int nx = i - 1;
+                    while(nx >= 0 && board[nx][j] == ' ')
+                    {
+                        nx--;
+                    }
+                    if(nx >= 0)
+                    {
+                        board[i][j] = board[nx][j];
+                        board[nx][j] = ' ';
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    return answer;
+}
