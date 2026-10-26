@@ -1,0 +1,72 @@
+#include <string>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+
+using namespace std;
+
+string convertNotes(string s)
+{
+    
+    string res = "";
+    for(size_t i = 0; i < s.length(); i++)
+    {
+        if(i + 1 < s.length() && s[i + 1] == '#')
+        {
+            res += tolower(s[i]);
+            i++;
+        }
+        else
+        {
+            res += s[i];
+        }
+    }
+    
+    return res;
+}
+
+int getMinutes(string time)
+{
+    int h = stoi(time.substr(0, 2));
+    int m = stoi(time.substr(3, 2));
+    return h * 60 + m;
+}
+
+string solution(string m, vector<string> musicinfos) {
+
+    string converted_m = convertNotes(m);
+    string answer_title = "(None)";
+    int max_time = -1;
+    
+    for(const string& info : musicinfos)
+    {
+        stringstream ss(info);
+        string start, end, title, melody;
+        
+        getline(ss, start, ',');
+        getline(ss, end, ',');
+        getline(ss, title, ',');
+        getline(ss, melody, ',');
+        
+        int play_time = getMinutes(end) - getMinutes(start);
+        string converted_melody = convertNotes(melody);
+        
+        string played_sheet = "";
+        for(int t = 0; t < play_time; t++)
+        {
+            played_sheet += converted_melody[t % converted_melody.length()];
+        }
+        
+        if(played_sheet.find(converted_m) != string::npos)
+        {
+            if(play_time > max_time)
+            {
+                max_time = play_time;
+                answer_title = title;
+            }
+        }
+        
+    }
+    
+    return answer_title;
+}
