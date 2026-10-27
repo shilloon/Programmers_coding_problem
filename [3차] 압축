@@ -1,0 +1,42 @@
+#include <string>
+#include <vector>
+#include <unordered_map>
+
+using namespace std;
+
+vector<int> solution(string msg) {
+    vector<int> answer;
+    unordered_map<string, int> dictionary;
+    
+    int dict_idx = 1;
+    for(char c = 'A'; c <= 'Z'; c++)
+    {
+        string s = "";
+        s += c;
+        dictionary[s] = dict_idx++;
+    }
+    
+    string w = "";
+    for(char c : msg)
+    {
+        string wc = w + c;
+        
+        if(dictionary.count(wc))
+        {
+            w = wc;
+        }
+        else
+        {
+            answer.push_back(dictionary[w]);
+            dictionary[wc] = dict_idx++;
+            w = string(1, c);
+        }
+    }
+    
+    if(!w.empty())
+    {
+        answer.push_back(dictionary[w]);
+    }
+    
+    return answer;
+}
