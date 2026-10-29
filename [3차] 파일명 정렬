@@ -1,0 +1,89 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cctype>
+
+using namespace std;
+
+struct File {
+    
+    string original;
+    string head;
+    int number;
+    int index;
+    
+};
+
+File parseFile(string file_str, int idx)
+{
+    
+    string h = "";
+    string n_str = "";
+    string t = "";
+    
+    int i = 0;
+    
+    while(i < file_str.length() && !isdigit(file_str[i]))
+    {
+        h += file_str[i];
+        i++;
+        
+    }
+    
+    while(i < file_str.length() && isdigit(file_str[i]) && n_str.length() < 5)
+    {
+        n_str += file_str[i];
+        i++;
+    }
+    
+    while(i < file_str.length())
+    {
+        t += file_str[i];
+        i++;
+    }
+    
+    return {file_str, h, stoi(n_str), idx};
+}
+
+string toLowerStr(string s)
+{
+    
+    for(char &c : s) c = tolower(c);
+    return s;
+    
+}
+
+bool compareFiles(const File& a, const File& b)
+{
+    string h1 = toLowerStr(a.head);
+    string h2 = toLowerStr(b.head);
+    if(h1 != h2) {
+        
+        return h1 < h2;
+    }
+    
+    if(a.number != b.number)
+    {
+        return a.number < b.number;
+    }
+    
+    return false;
+}
+
+vector<string> solution(vector<string> files) {
+    vector<File> parsed_files;
+    for(int i = 0; i < files.size(); i++)
+    {
+        parsed_files.push_back(parseFile(files[i], i));
+    }
+    
+    stable_sort(parsed_files.begin(), parsed_files.end(), compareFiles);
+    
+    vector<string> answer;
+    for(const auto& f : parsed_files)
+    {
+        answer.push_back(f.original);
+    }
+    
+    return answer;
+}
