@@ -1,0 +1,28 @@
+#include <string>
+#include <vector>
+#include <unordered_set>
+
+using namespace std;
+
+bool solution(vector<string> phone_book) {
+    
+    unordered_set<string> phone_set(phone_book.begin(), phone_book.end());
+    
+    for(const string& phone : phone_book)
+    {
+        string prefix = "";
+        
+        for(size_t i = 0; i < phone.length() - 1; i++)
+        {
+            prefix += phone[i];
+            
+            if(phone_set.count(prefix))
+            {
+                return false;
+            }
+            
+        }
+    }
+    
+    return true;
+}
